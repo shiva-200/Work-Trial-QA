@@ -12,7 +12,7 @@
 
 - Rebuild the backend after backend code changes with `docker compose up --build -d backend`.
 
-2### Login security fix
+2### Login can be bypassed without password using email trick (NoSQL Injection) Fix
 
 The `/api/login` endpoint validates that email and password are strings, then
 looks up the account using exact `email` and `password_md5` fields. It no longer
