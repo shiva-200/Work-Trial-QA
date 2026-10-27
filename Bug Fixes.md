@@ -1,4 +1,4 @@
-### Login fixes
+1.### Login fixes
 
 - The admin seed now stores the correct MD5 digest for `Sample@123`.
 - The 2FA endpoint converts the browser's string `user_id` to an integer before
