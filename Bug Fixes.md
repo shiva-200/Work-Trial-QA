@@ -11,3 +11,10 @@
 	```
 
 - Rebuild the backend after backend code changes with `docker compose up --build -d backend`.
+
+2### Login security fix
+
+The `/api/login` endpoint validates that email and password are strings, then
+looks up the account using exact `email` and `password_md5` fields. It no longer
+builds a MongoDB `$where` expression from user input, preventing NoSQL injection
+through the login email field.
