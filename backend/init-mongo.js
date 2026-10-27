@@ -9,14 +9,14 @@ db = db.getSiblingDB("harshwal_brd");
 
 // --- users ---------------------------------------------------------------
 // Passwords are stored as unsalted MD5 (planted weakness).
-//   admin@sample.com      -> Sample@123  (md5 d60d07b4991ab52e3885fa642555a3ac)
+//   admin@sample.com      -> Sample@123  (md5 7431c778a9e22c38bb3378aa5604f1f5)
 //   consultant@sample.com -> Welcome@1     (md5 3ff8f9dcad3fe711ddf22a59a2b75b2c)
 db.users.insertMany([
   {
     id: 1,
     email: "admin@sample.com",
     full_name: "Harshwal Admin",
-    password_md5: "d60d07b4991ab52e3885fa642555a3ac",
+    password_md5: "7431c778a9e22c38bb3378aa5604f1f5",
     role: "admin",
     otp_code: null,
     otp_expires: null,

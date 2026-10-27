@@ -18,21 +18,18 @@ def _md5(value: str) -> str:
 def login():
     """Step 1 of login: email + password, then issue an OTP for 2FA."""
     body = request.get_json(force=True, silent=True) or {}
+    if not isinstance(body, dict):
+        return jsonify({"error": "invalid credentials"}), 401
+
     email = body.get("email", "")
     password = body.get("password", "")
+    if not isinstance(email, str) or not isinstance(password, str):
+        return jsonify({"error": "invalid credentials"}), 401
 
     pw_hash = _md5(password)
 
     db = get_db()
-
-    # VULNERABLE: query built as a raw JavaScript $where string with the
-    # user-supplied email interpolated in. This is the NoSQL analogue of SQL
-    # injection -- e.g. email = `x' || true || '` authenticates as the first
-    # user. Candidates should flag this injection sink.
-    where = (
-        f"this.email == '{email}' && this.password_md5 == '{pw_hash}'"
-    )
-    user = db.users.find_one({"$where": where})
+    user = db.users.find_one({"email": email, "password_md5": pw_hash})
 
     if not user:
         return jsonify({"error": "invalid credentials"}), 401
@@ -66,6 +63,11 @@ def verify_2fa():
     body = request.get_json(force=True, silent=True) or {}
     user_id = body.get("user_id")
     otp = body.get("otp", "")
+
+    try:
+        user_id = int(user_id)
+    except (TypeError, ValueError):
+        return jsonify({"error": "unknown user"}), 404
 
     db = get_db()
     user = db.users.find_one({"id": user_id})
